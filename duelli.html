@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>🤠 Duelli - Gioco di Riflessi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* Font Western da Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Stardos Stencil', cursive;
+      height: 100vh;
+      background-color: #a2d4f0; /* Azzurrino iniziale */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: background-color 0.5s ease;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      color: #3b2f2f;
+      text-shadow: 2px 2px #fff;
+    }
+
+    .instructions {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: #fff;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .game-area {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: 300px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border: 4px solid #3b2f2f;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .cowboy,
+    .enemy {
+      font-size: 4em;
+    }
+
+    .message {
+      font-size: 2em;
+      color: #fff;
+      margin-bottom: 20px;
+      height: 60px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border: none;
+      background-color: #c79549;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Stardos Stencil', cursive;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #a7742e;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .bang {
+      position: absolute;
+      top: 40%;
+      font-size: 2.5em;
+      color: red;
+      animation: bang 0.5s ease forwards;
+    }
+
+    .bang.player {
+      left: 20%;
+    }
+
+    .bang.enemy {
+      right: 20%;
+    }
+
+    @keyframes bang {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .cowboy,
+      .enemy {
+        font-size: 3em;
+      }
+
+      .instructions {
+        font-size: 1em;
+      }
+
+      h1 {
+        font-size: 2.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🤠 Duelli</h1>
+  <div class="instructions">
+    Preparati! Quando lo sfondo diventa color sabbia, premi il tasto <strong>L</strong> <em>o tocca lo schermo</em> per sparare.<br />
+    Se spari prima del tempo, perdi!
+  </div>
+
+  <div class="game-area">
+    <div class="cowboy">🧑‍🌾</div>
+    <div class="enemy">🤠</div>
+  </div>
+
+  <div class="message" id="message">Premi "L" quando lo sfondo cambia!</div>
+  <button id="playBtn">🎮 Inizia il duello</button>
+
+  <script>
+    const playBtn = document.getElementById('playBtn');
+    const message = document.getElementById('message');
+    const body = document.body;
+
+    let gameStarted = false;
+    let canShoot = false;
+    let timeoutId;
+    let enemyShotTimeout;
+
+    function resetGame() {
+      body.style.backgroundColor = '#a2d4f0'; // Azzurrino
+      message.textContent = 'Premi "L" o tocca lo schermo quando lo sfondo cambia!';
+      clearTimeout(timeoutId);
+      clearTimeout(enemyShotTimeout);
+      document.querySelectorAll('.bang').forEach(el => el.remove());
+      gameStarted = false;
+      canShoot = false;
+    }
+
+    function startGame() {
+      resetGame();
+      gameStarted = true;
+      message.textContent = 'Preparati al duello...';
+      playBtn.classList.add('hidden');
+
+      const waitTime = Math.floor(Math.random() * 3000) + 2000;
+
+      timeoutId = setTimeout(() => {
+        body.style.backgroundColor = '#e2c275'; // sabbia desertica
+        canShoot = true;
+        message.textContent = '⚡ FUOCO! Premi "L" o tocca lo schermo!';
+
+        enemyShotTimeout = setTimeout(() => {
+          if (gameStarted) {
+            showBang('enemy');
+            message.textContent = '💀 Hai perso! Il nemico ha sparato per primo.';
+            gameStarted = false;
+            playBtn.classList.remove('hidden');
+          }
+        }, Math.floor(Math.random() * 400) + 200);
+      }, waitTime);
+    }
+
+    function showBang(who) {
+      const bang = document.createElement('div');
+      bang.classList.add('bang', who);
+      bang.textContent = '💥';
+      document.querySelector('.game-area').appendChild(bang);
+    }
+
+    function shoot() {
+      if (!gameStarted) return;
+
+      if (!canShoot) {
+        message.textContent = '🚫 Hai sparato troppo presto!';
+        showBang('player');
+        gameStarted = false;
+        clearTimeout(timeoutId);
+        clearTimeout(enemyShotTimeout);
+        playBtn.classList.remove('hidden');
+      } else {
+        showBang('player');
+        message.textContent = '🔥 Hai vinto! Sei più veloce del nemico!';
+        gameStarted = false;
+        clearTimeout(enemyShotTimeout);
+        playBtn.classList.remove('hidden');
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'l') {
+        shoot();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (e.target === playBtn) return; // Ignora click sul bottone di start
+      shoot();
+    });
+
+    playBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Blocca bubbling per evitare shoot() dal click
+      startGame();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>🤠 Duelli </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Western -->
+  <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Stardos Stencil', cursive;
+      background-color: #a2d4f0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: background-color 0.3s ease;
+    }
+
+    h1 {
+      font-size: 3.5em;
+      color: #3b2f2f;
+      text-shadow: 3px 3px #fff;
+      margin-bottom: 40px;
+    }
+
+    .menu-buttons {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .menu-buttons a {
+      text-decoration: none;
+    }
+
+    .btn {
+      padding: 20px 40px;
+      font-size: 1.5em;
+      background-color: #c79549;
+      color: white;
+      border-radius: 15px;
+      cursor: pointer;
+      font-family: 'Stardos Stencil', cursive;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 4px 4px 0px #3b2f2f;
+      display: inline-block;
+      text-align: center;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background-color: #a7742e;
+      transform: scale(1.05);
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9em;
+      color: #444;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.2em;
+        text-align: center;
+      }
+
+      .btn {
+        font-size: 1.2em;
+        padding: 15px 30px;
+      }
+
+      .menu-buttons {
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🤠 DUELLI</h1>
+
+  <div class="menu-buttons">
+    <a href="duelli.html" class="btn">🎯 1 Giocatore</a>
+    <a href="duelli2P.html" class="btn">🤠 2 Giocatori (PC)</a>
+    <a href="duelliMP.html" class="btn">🤠 Multiplayer</a>
+  </div>
+
+  <div class="footer">
+    Scegli la modalità e preparati al duello!
+  </div>
+
+</body>
+</html>
